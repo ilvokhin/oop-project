@@ -2,5 +2,5 @@
 digraph G
 {
 	node [shape = record];
-	"vk server" -> "out app" [label = "Text?"]
+	"vk server" -> "out app" [label = "Text?" dir="both"]
 }
