@@ -1,0 +1,6 @@
+// dot -Tpdf phys.dot -o phys.pdf
+digraph G
+{
+	node [shape = record];
+	"vk server" -> "out app" [label = "Text?"]
+}
