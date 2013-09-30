@@ -1,0 +1,27 @@
+// dot -Tpdf logic.dot -o logic.pdf
+digraph G
+{
+	node [shape = record];	
+	subgraph cluster1 
+	{
+		label = "Слой 1";
+		"UI"
+		style = "dashed";
+	}
+	subgraph cluster2
+	{
+		label = "Слой 2";
+		"модуль обмена сообщениями", 
+		"модуль контакт-листа"
+		style = "dashed";
+	}
+	subgraph cluster3
+	{
+		label = "Слой 3";
+		"API Wrapper"
+		style = "dashed";
+	}
+	"UI" -> "модуль обмена сообщениями" -> "API Wrapper"
+	"UI" -> "модуль контакт-листа" -> "API Wrapper"
+
+}
