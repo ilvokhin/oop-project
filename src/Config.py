@@ -11,8 +11,8 @@ class Config(object):
 		self.config['is_login'] = False
 		if os.path.exists(self.config_file_path):
 			with open(self.config_file_path) as f:
-				config = pickle.load(f)
-			if 'token' in config:
+				self.config = pickle.load(f)
+			if 'token' in self.config:
 				self.config['is_login'] = True
 		else:
 			# add default values to config file
@@ -27,5 +27,8 @@ class Config(object):
 	
 	def update(self, key, value):
 		self.config[key] = value;
+		if key == 'token':
+			self.config['is_login'] = True
 		self.save()
+		
 

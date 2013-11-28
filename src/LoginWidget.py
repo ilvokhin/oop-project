@@ -31,7 +31,7 @@ class LoginWidget(QtGui.QWidget):
 		'user_id': ['4643070'], 'expires_in': ['0']}"""
  		if 'access_token' in at:
 			self.registry = Registry()
-			self.registry.objects['config'].update('token', at['access_token'])
+			self.registry.objects['config'].update('token', at['access_token'][0])
 			self.parent.hide_loginButton()
 			self.parent.contact_list_init()
 			self.close()

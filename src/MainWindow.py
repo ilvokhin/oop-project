@@ -8,6 +8,7 @@ from PyQt4 import uic
 
 from LoginWidget import LoginWidget
 from Registry import Registry
+from VkClient import VkClient
 from Config import Config
 
 class MainWindow(QtGui.QMainWindow):
@@ -24,7 +25,6 @@ class MainWindow(QtGui.QMainWindow):
 		
 		if self.registry.objects['config'].isLogin():
 			self.hide_loginButton()
-			self.contact_list_init();
 		
 	# widgets handlers
 	def loginButton_clicked(self):
@@ -37,13 +37,22 @@ class MainWindow(QtGui.QMainWindow):
                 self.ui.layout().update()
 	
 	def contact_list_init(self):
-		print "Init contact list"
+		self.registry.objects['vk'] = VkClient(self.registry.objects['config'].config['token'])
+		vk = self.registry.objects['vk']
+		contacts = vk.getAllFriends()
+ 		contacts_name = vk.getUsersInfo(contacts)
+	
+		for user in contacts_name:
+			self.contactList.addItem(user['first_name'] + ' ' + user['last_name'])
 
 def main():
 	app = QtGui.QApplication(sys.argv)
 	w = MainWindow()
 	w.show()
 	w.raise_()
+	# TODO: Use threads? Gevent?
+	w.contact_list_init()
+  	
 	sys.exit(app.exec_())
 
 if __name__ == "__main__":
