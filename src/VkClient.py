@@ -37,5 +37,3 @@ class VkClient(object):
 	def sendMessage(self, uid, message):
 		return vk.messages.send(uid = uid, message = message)
 
-if __name__ == "__main__":
-        main()
