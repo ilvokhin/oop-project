@@ -32,7 +32,7 @@ class LoginWidget(QtGui.QWidget):
 	def load_login_page(self):
 		#TODO: Set login url parametrs
  		login_url = "http://api.vkontakte.ru/oauth/authorize?client_id=3989945" \
-		"&scope=offline&redirect_uri=http://oauth.vk.com/blank.html&response_type=token"
+		"&scope=friends,messages,offline&redirect_uri=http://oauth.vk.com/blank.html&response_type=token"
 		self.webView.load(QtCore.QUrl(login_url))
 
 def main():
