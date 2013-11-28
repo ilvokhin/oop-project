@@ -51,7 +51,8 @@ def main():
 	w.show()
 	w.raise_()
 	# TODO: Use threads? Gevent?
-	w.contact_list_init()
+	if w.registry.objects['config'].isLogin():
+ 		w.contact_list_init()
   	
 	sys.exit(app.exec_())
 
