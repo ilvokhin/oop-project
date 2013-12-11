@@ -6,9 +6,10 @@ import sys
 from PyQt4 import QtGui
 from PyQt4 import uic
 
+from VkClientThread import VkClientThread
 from LoginWidget import LoginWidget
 from Registry import Registry
-from VkClient import VkClient
+#from VkClient import VkClient
 from Config import Config
 
 class MainWindow(QtGui.QMainWindow):
@@ -20,7 +21,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.registry = Registry()
 		self.registry.objects['config'] = Config()
 		
-		# connect widgets
+		# connect widgets and slots
 		self.loginButton.clicked.connect(self.loginButton_clicked)
 		
 		if self.registry.objects['config'].isLogin():
@@ -36,14 +37,24 @@ class MainWindow(QtGui.QMainWindow):
  		self.loginButton.hide()
                 self.ui.layout().update()
 	
-	def contact_list_init(self):
-		self.registry.objects['vk'] = VkClient(self.registry.objects['config'].config['token'])
+	def server_connection_init(self):
+		self.registry.objects['vk'] = VkClientThread(self.registry.objects['config'].config['token'])
 		vk = self.registry.objects['vk']
-		contacts = vk.getAllFriends()
- 		contacts_name = vk.getUsersInfo(contacts)
+		
+		vk.start()
+		
+		self.connect(vk, vk.updateOnlineForMainWindow, self.UpdateContactList)
+		
+		#contacts = vk.getAllFriends()
+ 		#contacts_name = vk.getUsersInfo(contacts)
 	
-		for user in contacts_name:
-			self.contactList.addItem(user['first_name'] + ' ' + user['last_name'])
+		#for user in contacts_name:
+		#	self.contactList.addItem(user['first_name'] + ' ' + user['last_name'])
+	
+	def UpdateContactList(self, names):
+		self.contactList.clear()
+		for user in names:
+			self.contactList.addItem(user)
 
 def main():
 	app = QtGui.QApplication(sys.argv)
@@ -52,7 +63,7 @@ def main():
 	w.raise_()
 	# TODO: Use threads? Gevent?
 	if w.registry.objects['config'].isLogin():
- 		w.contact_list_init()
+ 		w.server_connection_init()
   	
 	sys.exit(app.exec_())
 

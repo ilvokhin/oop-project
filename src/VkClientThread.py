@@ -35,10 +35,13 @@ class VkClientThread(QtCore.QThread):
 		QtCore.QThread.__init__(self)
 		self.token = access_token
 		self.vk = vkontakte.API(token = self.token)
-		self.contacts = []
 		self.online = []
 		self.messages = []
 		
+		self.updateOnlineForMainWindow = QtCore.SIGNAL("updateOnlineForMainWindow")
+		self.initContacts()
+	
+	def run(self):
 		self.online_checker = VkOnTimeWorker(5 * 60, "updateOnline", self.vk.friends.getOnline)
 		self.connect(self.online_checker, self.online_checker.signal, self.updateOnline)
 		self.online_checker.start()
@@ -46,12 +49,30 @@ class VkClientThread(QtCore.QThread):
 		self.message_checker = VkOnTimeWorker(100, "recieveMessages", self.vk.messages.get, filters = 1)
 		self.connect(self.message_checker, self.message_checker.signal, self.recieveMessages)
 		self.message_checker.start()
-
-	#TODO: add signal to mainwindow
+		
+		#self.initContacts()
+		
+	#TODO: add signal to MainWindow
+	
+	def initContacts(self):
+		self.contacts_id = self.getAllFriends()
+		response = self.getUsersInfo(self.contacts_id)
+		self.id_to_name =  {}
+		self.name_to_id = {}
+		
+		for elem in response:
+			name = elem['first_name'] + ' ' + elem['last_name']
+			_id = elem['uid']
+			self.id_to_name[_id] = name
+			self.name_to_id[name] = _id
 	
 	def updateOnline(self, online):
 		self.online = online
-		print self.online
+		#print self.online
+		online_names = []
+		for uid in self.online:
+			online_names.append(self.id_to_name[uid])
+		self.emit(self.updateOnlineForMainWindow, online_names)
 	
 	def recieveMessages(self, msgs):
 		self.messages = msgs
@@ -60,6 +81,10 @@ class VkClientThread(QtCore.QThread):
         def getServerTime(self):
                 """Test function to check connection to vk.com server."""
                 return self.vk.GetServerTime()
+
+        def getAllFriends(self):
+                """Return list *only* with users ids."""
+                return self.vk.friends.get()
 
         def getUserInfo(self, user_id):
                 """Return dict with user info. 
