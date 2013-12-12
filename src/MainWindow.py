@@ -102,9 +102,8 @@ class MainWindow(QtGui.QMainWindow):
         # proof of concept
         def contactListEntry_doubleclicked (self, entry):
                 name = entry.text()
-                if 'chatwindow' not in self.registry.objects:
-                    self.registry.objects['chatwindow'] = ChatWindow()
-                self.ChatWindow = self.registry.objects['chatwindow']
+		if not hasattr(self, 'ChatWindow'):
+			self.ChatWindow = ChatWindow()
                 id = self.registry.objects['vk'].name_to_id[unicode (name)]
                 self.ChatWindow.addChatTab (id, name)
                 self.ChatWindow.show()
