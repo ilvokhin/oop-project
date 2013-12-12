@@ -17,6 +17,7 @@ class ChatTab (QtGui.QWidget):
         self.ui = uic.loadUi (("./ui/chatTab.ui"), self)
         self.closeButton.clicked.connect(self.closeButton_clicked)
         self.messageField.textChanged.connect (self.text_changed)
+        self.sendButton.clicked.connect(self.send_message)
         self.id = id
 
     def closeButton_clicked (self):
@@ -29,6 +30,11 @@ class ChatTab (QtGui.QWidget):
             self.sendButton.setEnabled (True)
         else:
             self.sendButton.setEnabled (False)
+
+    def send_message (self):
+        msg = self.messageField.toPlainText()
+        self.messageField.clear()
+        self.chatLog.append ("<b>" + "me:" + "</b> " + msg)
 
 def main():
         app = QtGui.QApplication(sys.argv)
