@@ -39,10 +39,11 @@ class ChatTab (QtGui.QWidget):
 
     def send_message (self):
         msg = self.messageField.toPlainText()
-	self.vk.sendMessage(self.id, unicode(msg))
-        self.messageField.clear()
-        self.add_message(msg)
-        self.messageField.setFocus()
+	if( msg):
+		self.vk.sendMessage(self.id, unicode(msg))
+		self.messageField.clear()
+		self.add_message(msg)
+		self.messageField.setFocus()
 
     def load_history(self, uid, count = 3):
 	reg = Registry()
