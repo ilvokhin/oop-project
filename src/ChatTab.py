@@ -19,6 +19,9 @@ class ChatTab (QtGui.QWidget):
         self.messageField.textChanged.connect (self.text_changed)
         self.sendButton.clicked.connect(self.send_message)
         self.id = id
+	
+	reg = Registry()
+        self.vk = reg.objects['vk']
 
     def closeButton_clicked (self):
         self.close()
@@ -31,10 +34,28 @@ class ChatTab (QtGui.QWidget):
         else:
             self.sendButton.setEnabled (False)
 
+    def add_message(self, msg, name = "me"):
+	self.chatLog.append("<b>" + name + ":</b> " + msg)
+
+
     def send_message (self):
         msg = self.messageField.toPlainText()
+	self.vk.sendMessage(self.id, unicode(msg))
         self.messageField.clear()
-        self.chatLog.append ("<b>" + "me:" + "</b> " + msg)
+	self.add_message(msg)
+
+    def load_history(self, uid, count = 3):
+	reg = Registry()
+	self.vk = reg.objects['vk']
+	msgs = self.vk.getHistory(uid)
+	
+	name = self.vk.id_to_name[uid]
+	
+	for msg in msgs:
+		if msg['uid'] == uid:
+			self.add_message(msg['body'], name)
+		else:
+			self.add_message(msg['body'])
 
 def main():
         app = QtGui.QApplication(sys.argv)
