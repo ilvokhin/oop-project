@@ -71,10 +71,10 @@ class VkClientThread(QtCore.QThread):
 	def updateOnline(self, online):
 		self.online = online
 		#print self.online
-		online_names = []
-		for uid in self.online:
-			online_names.append(self.id_to_name[uid])
-		self.emit(self.updateOnlineForMainWindow, online_names)
+		#for uid in self.online:
+		#online_id.append(self.id_to_name[uid['uid']])
+		self.emit(self.updateOnlineForMainWindow, self.online)
+		#self.emit(self.updateOnlineForMainWindow, self.online)
 	
 	def recieveMessages(self, msgs):
 		self.messages = msgs
