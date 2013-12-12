@@ -44,7 +44,6 @@ class ChatWindow (QTabWidget):
         self.removeTab (idx)
         del self.tabs[id]
         if (self.count() == 0):
-            self.names = {}
             self.close()
 
     def resetTitle (self, id):
@@ -53,7 +52,6 @@ class ChatWindow (QTabWidget):
     def closeEvent(self, event):
 	for tab in self.tabs:
 		self.removeTab(self.tabs[tab])
-	self.names = {}
 	self.tabs = {}
 	self.close()
 
