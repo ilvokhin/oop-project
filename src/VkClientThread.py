@@ -44,7 +44,7 @@ class VkClientThread(QtCore.QThread):
 		self.initContacts()
 	
 	def run(self):
-		self.online_checker = VkOnTimeWorker(5 * 60, "updateOnline", self.vk.friends.getOnline)
+		self.online_checker = VkOnTimeWorker(1 * 60, "updateOnline", self.vk.friends.getOnline)
 		self.connect(self.online_checker, self.online_checker.signal, self.updateOnline)
 		self.online_checker.start()
 		
@@ -114,7 +114,7 @@ class VkClientThread(QtCore.QThread):
 		return reversed(history)
 
 def main():
-	vk = VkClientThread('b617d396e883d3a4e3ca3e1569dbab6a9fb386e1b1ccc305e1954e9142c23f83e66e5314a226d78cccb94')
+	vk = VkClientThread('')
 	app = QtGui.QApplication(sys.argv)
 	
 	sys.exit(app.exec_())
