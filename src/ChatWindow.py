@@ -23,14 +23,15 @@ class ChatWindow (QTabWidget):
         # user ID -> tab number
         self.tabs = {}
 
-    def addChatTab (self, id, name):
+    def addChatTab (self, id, name, history_cnt = 3):
         if id not in self.tabs:
             tab = ChatTab(id)
             tab.closeButton.clicked.connect(self.closeButton_clicked)
 
             self.tabs[id] = self.count()
             self.addTab (tab, name)
-	    #tab.load_history(id)
+	    tab.load_history(id, history_cnt)
+	
         self.setCurrentIndex (self.tabs[id])
         self.activateWindow()
         self.widget(self.tabs[id]).messageField.setFocus()
