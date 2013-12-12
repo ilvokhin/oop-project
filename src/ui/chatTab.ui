@@ -24,34 +24,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="3">
-    <widget class="QPlainTextEdit" name="messageField">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>100</width>
-       <height>50</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>100</height>
-      </size>
-     </property>
-     <property name="sizeIncrement">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0">
     <spacer name="horizontalSpacer">
      <property name="orientation">
@@ -66,7 +38,7 @@
     </spacer>
    </item>
    <item row="2" column="1">
-    <widget class="QPushButton" name="sendMessageButton">
+    <widget class="QPushButton" name="sendButton">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -103,6 +75,34 @@
      </property>
      <property name="text">
       <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QPlainTextEdit" name="messageField">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="sizeIncrement">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
      </property>
     </widget>
    </item>
