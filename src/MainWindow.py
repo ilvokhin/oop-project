@@ -21,6 +21,7 @@ class MainWindow(QtGui.QMainWindow):
 		
 		self.registry = Registry()
 		self.registry.objects['config'] = Config()
+		self.new_messages = []
 		
 		# connect widgets and slots
 		self.loginButton.clicked.connect(self.loginButton_clicked)
@@ -56,13 +57,33 @@ class MainWindow(QtGui.QMainWindow):
 	
 	def UpdateContactList(self, names):
 		self.contactList.clear()
+		
+ 		vk = self.registry.objects['vk']
+		
+		showed = set()
+		
+		# TODO: fix if user is not friend
+		for user in self.new_messages:
+ 			self.contactList.addItem(vk.id_to_name[user])
+			showed.add(user)
+		
 		for user in names:
-			self.contactList.addItem(user)
+			if user not in showed:
+				item = QtGui.QListWidgetItem(vk.id_to_name[user])
+				item.setIcon(QtGui.QIcon(r"./data/pics/online.png"))
+				self.contactList.addItem(item)
+				showed.add(user)
+		for id in vk.id_to_name:
+			if id not in showed:
+				item = QtGui.QListWidgetItem(vk.id_to_name[id])
+                                item.setIcon(QtGui.QIcon(r"./data/pics/offline.png"))
+                                self.contactList.addItem(item)
 
 	def RecieveNewMessages(self, msgs):
 		vk = self.registry.objects['vk']
 		msgs.pop(0)
 		mark_as_read = []
+		self.new_messages[:] = []
 		for msg in reversed(msgs):
 			if hasattr(self, 'ChatWindow') and msg['uid'] in self.ChatWindow.tabs:
 				uid = msg['uid']
@@ -71,12 +92,15 @@ class MainWindow(QtGui.QMainWindow):
 				# mark as read?
 				mark_as_read.append(msg['mid'])
 			else:
-				pass
 				#Change icon in contact list
-				#print "Chat doesn't open"
-				#print msg
+  				print "Chat doesn't open"
+				print msg
+				self.new_messages.append(msg['uid'])
 		if mark_as_read:
 			vk.markAsRead(mark_as_read)
+		self.new_messages = list(set(self.new_messages))
+		if self.new_messages or mark_as_read:
+			self.UpdateContactList(vk.online)
 	
         # proof of concept
         def contactListEntry_doubleclicked (self, entry):
