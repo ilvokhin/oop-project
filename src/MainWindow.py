@@ -21,7 +21,7 @@ class MainWindow(QtGui.QMainWindow):
 		
 		self.registry = Registry()
 		self.registry.objects['config'] = Config()
-		self.new_messages = []
+		self.new_messages = {}
 		
 		# connect widgets and slots
 		self.loginButton.clicked.connect(self.loginButton_clicked)
@@ -79,7 +79,7 @@ class MainWindow(QtGui.QMainWindow):
 		vk = self.registry.objects['vk']
 		msgs.pop(0)
 		mark_as_read = []
-		self.new_messages[:] = []
+		self.new_messages.clear()
 		for msg in reversed(msgs):
 			if hasattr(self, 'ChatWindow') and msg['uid'] in self.ChatWindow.tabs:
 				uid = msg['uid']
@@ -92,20 +92,29 @@ class MainWindow(QtGui.QMainWindow):
 				#Change icon in contact list
   				print "Chat doesn't open"
 				print msg
-				self.new_messages.append(msg['uid'])
+				if msg['uid'] in self.new_messages:
+ 					self.new_messages[msg['uid']].append(msg['mid'])
+				else:
+					self.new_messages[msg['uid']] = [msg['mid']]
 		if mark_as_read:
 			vk.markAsRead(mark_as_read)
-		self.new_messages = list(set(self.new_messages))
 		if self.new_messages or mark_as_read:
 			self.UpdateContactList(vk.online)
 	
         # proof of concept
         def contactListEntry_doubleclicked (self, entry):
                 name = entry.text()
+		vk = self.registry.objects['vk']
 		if not hasattr(self, 'ChatWindow'):
 			self.ChatWindow = ChatWindow()
-                id = self.registry.objects['vk'].name_to_id[unicode (name)]
-                self.ChatWindow.addChatTab (id, name)
+                id = vk.name_to_id[unicode (name)]
+		if id in self.new_messages:
+			self.ChatWindow.addChatTab (id, name, len(self.new_messages[id]))
+			vk.markAsRead(self.new_messages[id])
+			del self.new_messages[id]
+			self.UpdateContactList(vk.online)
+		else:
+                	self.ChatWindow.addChatTab (id, name)
                 self.ChatWindow.show()
  
 
