@@ -1,0 +1,32 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+
+from PyQt4 import QtCore
+from PyQt4 import QtGui
+from PyQt4 import uic
+
+from PyQt4.QtCore import QString
+from Registry import Registry
+from VkClientThread import VkClientThread
+
+class ChatTab (QtGui.QWidget):
+    def __init__(self, parent = None):
+        QtGui.QWidget.__init__(self, parent)
+        self.ui = uic.loadUi (("./ui/chatTab.ui"), self)
+        self.closeButton.clicked.connect(self.closeButton_clicked)
+
+    def closeButton_clicked (self):
+        self.close()
+        self.closeButton.raise_()
+
+def main():
+        app = QtGui.QApplication(sys.argv)
+        w = ChatTab()
+        w.show()
+        w.raise_()
+        sys.exit(app.exec_())
+
+if __name__ == "__main__":
+        main()

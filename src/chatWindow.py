@@ -11,33 +11,33 @@ from PyQt4.QtGui import QTabWidget
 from PyQt4.QtCore import QString
 from Registry import Registry
 from VkClientThread import VkClientThread
+from ChatTab import ChatTab
 
-class chatWindow (QTabWidget):
+class ChatWindow (QTabWidget):
     def __init__(self, parent = None):
         QTabWidget.__init__(self, parent)
         self.ui = uic.loadUi(("./ui/chatWindow.ui"), self)
 
-        """for i in xrange (1, 10):
+        # test
+        for i in xrange (1, 10):
             s = QString ("%1").arg (i)
-            self.addTab (self.createTab(), s)"""
+            w = self.createTab()
+            w.closeButton.clicked.connect(self.closeButton_clicked)
+            self.addTab (w, s)
+
 
     def createTab (self):
-        newTab = QtGui.QWidget()
-        newTab.ui = uic.loadUi (("./ui/chatTab.ui"), newTab)
-        return newTab
+        return ChatTab()
 
-    # TODO: connect with an actual close button from a tab widget, just like this:
-    # self.closeTabButton.clicked.connect(self.closeTabButton_clicked)
-    def closeTabButton_clicked (self):
+    def closeButton_clicked (self):
         self.removeTab (self.currentIndex())
         if (self.count() == 0):
             self.close()
-        self.closeTabButton.raise_()
 
 
 def main():
         app = QtGui.QApplication(sys.argv)
-        w = chatWindow()
+        w = ChatWindow()
         w.show()
         w.raise_()
         sys.exit(app.exec_())
