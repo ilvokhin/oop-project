@@ -19,6 +19,7 @@ class ChatWindow (QTabWidget):
         self.ui = uic.loadUi(("./ui/chatWindow.ui"), self)
         self.currentChanged.connect (self.resetTitle)
 
+	self.connect(self, QtCore.SIGNAL('triggered()'), self.closeEvent)
         # user ID -> tab number
         self.tabs = {}
 
@@ -48,6 +49,13 @@ class ChatWindow (QTabWidget):
 
     def resetTitle (self, id):
         self.setWindowTitle (self.tabText (id))
+
+    def closeEvent(self, event):
+	for tab in self.tabs:
+		self.removeTab(self.tabs[tab])
+	self.names = {}
+	self.tabs = {}
+	self.close()
 
 def main():
         app = QtGui.QApplication(sys.argv)

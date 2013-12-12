@@ -85,10 +85,8 @@ class MainWindow(QtGui.QMainWindow):
 				uid = msg['uid']
 				name = vk.id_to_name[uid]
 				self.ChatWindow.getTab(msg['uid']).add_message(msg['body'], name)
-				# mark as read?
-				if self.ChatWindow.isVisible():
-					print "visible"
- 					mark_as_read.append(msg['mid'])
+				if self.ChatWindow.tabs[uid] == cur_idx:
+ 	 				mark_as_read.append(msg['mid'])
 			else:
 				#Change icon in contact list
   				print "Chat doesn't open"
