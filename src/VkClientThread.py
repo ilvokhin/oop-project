@@ -25,9 +25,9 @@ class VkOnTimeWorker(QtCore.QThread):
 	def run(self):
 		while True:
 			new_data = self.function(*self.args, **self.kwargs)
-			if new_data != self.data:
-				self.data = new_data
-				self.emit(self.signal, self.data)
+			#if new_data != self.data:
+			self.data = new_data
+			self.emit(self.signal, self.data)
 			time.sleep(self.sleep_time)
 
 class VkClientThread(QtCore.QThread):
@@ -39,6 +39,8 @@ class VkClientThread(QtCore.QThread):
 		self.messages = []
 		
 		self.updateOnlineForMainWindow = QtCore.SIGNAL("updateOnlineForMainWindow")
+		self.recieveMessagesForMainWindow = QtCore.SIGNAL("recieveMessagesForMainWindow")
+		
 		self.initContacts()
 	
 	def run(self):
@@ -46,7 +48,7 @@ class VkClientThread(QtCore.QThread):
 		self.connect(self.online_checker, self.online_checker.signal, self.updateOnline)
 		self.online_checker.start()
 		
-		self.message_checker = VkOnTimeWorker(100, "recieveMessages", self.vk.messages.get, filters = 1)
+		self.message_checker = VkOnTimeWorker(3, "recieveMessages", self.vk.messages.get, filters = 1)
 		self.connect(self.message_checker, self.message_checker.signal, self.recieveMessages)
 		self.message_checker.start()
 		
@@ -76,7 +78,8 @@ class VkClientThread(QtCore.QThread):
 	
 	def recieveMessages(self, msgs):
 		self.messages = msgs
-		print self.messages
+		#print self.messages
+		self.emit(self.recieveMessagesForMainWindow, self.messages)
 
         def getServerTime(self):
                 """Test function to check connection to vk.com server."""
@@ -98,7 +101,17 @@ class VkClientThread(QtCore.QThread):
                 return self.vk.users.get(uids=uids_str)
 
         def sendMessage(self, uid, message):
-                return vk.messages.send(uid = uid, message = message)
+                return self.vk.messages.send(uid = uid, message = message)
+	
+	def markAsRead(self, mids):
+		mids_str = ', '.join(str(elem) for elem in mids)
+		self.vk.messages.markAsRead(mids = mids_str)
+	
+	def getHistory(self, uid, count = 3, rev = 0):
+		"""Return list of dict with history"""
+		history = self.vk.messages.getHistory(uid = uid, count = count, rev = rev)
+		history.pop(0)
+		return reversed(history)
 
 def main():
 	vk = VkClientThread('b617d396e883d3a4e3ca3e1569dbab6a9fb386e1b1ccc305e1954e9142c23f83e66e5314a226d78cccb94')
