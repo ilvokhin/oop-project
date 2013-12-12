@@ -26,13 +26,13 @@ class ChatWindow (QTabWidget):
         if id not in self.tabs:
             tab = ChatTab(id)
             tab.closeButton.clicked.connect(self.closeButton_clicked)
-            # TODO: connect 'send' button and some slot
 
             self.tabs[id] = self.count()
             self.addTab (tab, name)
 	    #tab.load_history(id)
         self.setCurrentIndex (self.tabs[id])
         self.activateWindow()
+        self.widget(self.tabs[id]).messageField.setFocus()
 
     def getTab(self, uid):
 	return self.widget( self.tabs[uid] )

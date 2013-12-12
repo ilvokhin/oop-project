@@ -35,14 +35,14 @@ class ChatTab (QtGui.QWidget):
             self.sendButton.setEnabled (False)
 
     def add_message(self, msg, name = "me"):
-	self.chatLog.append("<b>" + name + ":</b> " + msg)
-
+        self.chatLog.append("<b>" + name + ":</b> " + msg)
 
     def send_message (self):
         msg = self.messageField.toPlainText()
 	self.vk.sendMessage(self.id, unicode(msg))
         self.messageField.clear()
-	self.add_message(msg)
+        self.add_message(msg)
+        self.messageField.setFocus()
 
     def load_history(self, uid, count = 3):
 	reg = Registry()
