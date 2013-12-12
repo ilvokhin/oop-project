@@ -84,8 +84,9 @@ class MainWindow(QtGui.QMainWindow):
 			if hasattr(self, 'ChatWindow') and msg['uid'] in self.ChatWindow.tabs:
 				uid = msg['uid']
 				name = vk.id_to_name[uid]
-				self.ChatWindow.getTab(msg['uid']).add_message(msg['body'], name)
+				cur_idx = self.ChatWindow.currentIndex()
 				if self.ChatWindow.tabs[uid] == cur_idx:
+ 					self.ChatWindow.getTab(msg['uid']).add_message(msg['body'], name)
  	 				mark_as_read.append(msg['mid'])
 			else:
 				#Change icon in contact list
