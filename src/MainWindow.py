@@ -46,6 +46,7 @@ class MainWindow(QtGui.QMainWindow):
 		vk.start()
 		
 		self.connect(vk, vk.updateOnlineForMainWindow, self.UpdateContactList)
+		self.connect(vk, vk.recieveMessagesForMainWindow, self.RecieveNewMessages)
 		
 		#contacts = vk.getAllFriends()
  		#contacts_name = vk.getUsersInfo(contacts)
@@ -58,17 +59,34 @@ class MainWindow(QtGui.QMainWindow):
 		for user in names:
 			self.contactList.addItem(user)
 
+	def RecieveNewMessages(self, msgs):
+		vk = self.registry.objects['vk']
+		msgs.pop(0)
+		mark_as_read = []
+		for msg in reversed(msgs):
+			if hasattr(self, 'ChatWindow') and msg['uid'] in self.ChatWindow.tabs:
+				uid = msg['uid']
+				name = vk.id_to_name[uid]
+				self.ChatWindow.getTab(msg['uid']).add_message(msg['body'], name)
+				# mark as read?
+				mark_as_read.append(msg['mid'])
+			else:
+				pass
+				#Change icon in contact list
+				#print "Chat doesn't open"
+				#print msg
+		if mark_as_read:
+			vk.markAsRead(mark_as_read)
+	
         # proof of concept
         def contactListEntry_doubleclicked (self, entry):
                 name = entry.text()
                 if 'chatwindow' not in self.registry.objects:
                     self.registry.objects['chatwindow'] = ChatWindow()
-                self.chatWindow = self.registry.objects['chatwindow']
+                self.ChatWindow = self.registry.objects['chatwindow']
                 id = self.registry.objects['vk'].name_to_id[unicode (name)]
-                self.chatWindow.addChatTab (id, name)
-                self.chatWindow.show()
-
-
+                self.ChatWindow.addChatTab (id, name)
+                self.ChatWindow.show()
 
 def main():
 	app = QtGui.QApplication(sys.argv)
