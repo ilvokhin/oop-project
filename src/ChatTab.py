@@ -12,10 +12,11 @@ from Registry import Registry
 from VkClientThread import VkClientThread
 
 class ChatTab (QtGui.QWidget):
-    def __init__(self, parent = None):
+    def __init__(self, id, parent = None):
         QtGui.QWidget.__init__(self, parent)
         self.ui = uic.loadUi (("./ui/chatTab.ui"), self)
         self.closeButton.clicked.connect(self.closeButton_clicked)
+        self.id = id
 
     def closeButton_clicked (self):
         self.close()

@@ -17,22 +17,33 @@ class ChatWindow (QTabWidget):
     def __init__(self, parent = None):
         QTabWidget.__init__(self, parent)
         self.ui = uic.loadUi(("./ui/chatWindow.ui"), self)
+        self.currentChanged.connect (self.resetTitle)
 
-        # test
-        for i in xrange (1, 10):
-            s = QString ("%1").arg (i)
-            w = self.createTab()
-            w.closeButton.clicked.connect(self.closeButton_clicked)
-            self.addTab (w, s)
+        # user ID -> tab number
+        self.tabs = {}
 
+    def addChatTab (self, id, name):
+        if id not in self.tabs:
+            tab = ChatTab(id)
+            tab.closeButton.clicked.connect(self.closeButton_clicked)
+            # TODO: connect 'send' button and some slot
 
-    def createTab (self):
-        return ChatTab()
+            self.tabs[id] = self.count()
+            self.addTab (tab, name)
+        self.setCurrentIndex (self.tabs[id])
+        self.activateWindow()
 
     def closeButton_clicked (self):
-        self.removeTab (self.currentIndex())
+        idx = self.currentIndex()
+        id = self.widget (idx).id
+        self.removeTab (idx)
+        del self.tabs[id]
         if (self.count() == 0):
+            self.names = {}
             self.close()
+
+    def resetTitle (self, id):
+        self.setWindowTitle (self.tabText (id))
 
 
 def main():

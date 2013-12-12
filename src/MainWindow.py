@@ -11,6 +11,7 @@ from LoginWidget import LoginWidget
 from Registry import Registry
 #from VkClient import VkClient
 from Config import Config
+from ChatWindow import ChatWindow
 
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self, parent = None):
@@ -23,7 +24,8 @@ class MainWindow(QtGui.QMainWindow):
 		
 		# connect widgets and slots
 		self.loginButton.clicked.connect(self.loginButton_clicked)
-		
+                self.contactList.itemDoubleClicked.connect (self.contactListEntry_doubleclicked)
+
 		if self.registry.objects['config'].isLogin():
 			self.hide_loginButton()
 		
@@ -55,6 +57,18 @@ class MainWindow(QtGui.QMainWindow):
 		self.contactList.clear()
 		for user in names:
 			self.contactList.addItem(user)
+
+        # proof of concept
+        def contactListEntry_doubleclicked (self, entry):
+                name = entry.text()
+                if 'chatwindow' not in self.registry.objects:
+                    self.registry.objects['chatwindow'] = ChatWindow()
+                self.chatWindow = self.registry.objects['chatwindow']
+                id = self.registry.objects['vk'].name_to_id[unicode (name)]
+                self.chatWindow.addChatTab (id, name)
+                self.chatWindow.show()
+
+
 
 def main():
 	app = QtGui.QApplication(sys.argv)
