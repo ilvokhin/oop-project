@@ -56,6 +56,9 @@ class ChatTab (QtGui.QWidget):
 			self.add_message(msg['body'], name)
 		else:
 			self.add_message(msg['body'])
+    def keyPressEvent(self, event):
+        if event.modifiers() and QtCore.Qt.ControlModifier and event.key() == QtCore.Qt.Key_Return:
+		self.send_message()
 
 def main():
         app = QtGui.QApplication(sys.argv)
