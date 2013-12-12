@@ -49,12 +49,6 @@ class MainWindow(QtGui.QMainWindow):
 		self.connect(vk, vk.updateOnlineForMainWindow, self.UpdateContactList)
 		self.connect(vk, vk.recieveMessagesForMainWindow, self.RecieveNewMessages)
 		
-		#contacts = vk.getAllFriends()
- 		#contacts_name = vk.getUsersInfo(contacts)
-	
-		#for user in contacts_name:
-		#	self.contactList.addItem(user['first_name'] + ' ' + user['last_name'])
-	
 	def UpdateContactList(self, names):
 		self.contactList.clear()
 		
@@ -64,8 +58,10 @@ class MainWindow(QtGui.QMainWindow):
 		
 		# TODO: fix if user is not friend
 		for user in self.new_messages:
- 			self.contactList.addItem(vk.id_to_name[user])
-			showed.add(user)
+			item = QtGui.QListWidgetItem(vk.id_to_name[user])
+                        item.setIcon(QtGui.QIcon(r"./data/pics/mail.png"))
+                        self.contactList.addItem(item)
+                        showed.add(user)
 		
 		for user in names:
 			if user not in showed:
@@ -90,7 +86,9 @@ class MainWindow(QtGui.QMainWindow):
 				name = vk.id_to_name[uid]
 				self.ChatWindow.getTab(msg['uid']).add_message(msg['body'], name)
 				# mark as read?
-				mark_as_read.append(msg['mid'])
+				if self.ChatWindow.isVisible():
+					print "visible"
+ 					mark_as_read.append(msg['mid'])
 			else:
 				#Change icon in contact list
   				print "Chat doesn't open"
@@ -111,6 +109,7 @@ class MainWindow(QtGui.QMainWindow):
                 id = self.registry.objects['vk'].name_to_id[unicode (name)]
                 self.ChatWindow.addChatTab (id, name)
                 self.ChatWindow.show()
+ 
 
 def main():
 	app = QtGui.QApplication(sys.argv)

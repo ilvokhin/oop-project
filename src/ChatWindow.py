@@ -49,7 +49,6 @@ class ChatWindow (QTabWidget):
     def resetTitle (self, id):
         self.setWindowTitle (self.tabText (id))
 
-
 def main():
         app = QtGui.QApplication(sys.argv)
         w = ChatWindow()
