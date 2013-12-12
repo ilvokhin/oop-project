@@ -30,8 +30,12 @@ class ChatWindow (QTabWidget):
 
             self.tabs[id] = self.count()
             self.addTab (tab, name)
+	    #tab.load_history(id)
         self.setCurrentIndex (self.tabs[id])
         self.activateWindow()
+
+    def getTab(self, uid):
+	return self.widget( self.tabs[uid] )
 
     def closeButton_clicked (self):
         idx = self.currentIndex()
