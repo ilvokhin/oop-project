@@ -26,6 +26,9 @@ class MainWindow(QtGui.QMainWindow):
 		self.popup_man = PopUpMan()
 		
 		self.sound = QtGui.QSound(r"./data/sounds/bb2.mp3")
+		self.online_icon = QtGui.QIcon(r"./data/pics/online.png")
+		self.offline_icon = QtGui.QIcon(r"./data/pics/offline.png") 
+		self.mail_icon = QtGui.QIcon(r"./data/pics/mail.png")
 		
 		# connect widgets and slots
 		self.loginButton.clicked.connect(self.loginButton_clicked)
@@ -65,20 +68,20 @@ class MainWindow(QtGui.QMainWindow):
 		# TODO: fix if user is not friend
 		for user in self.new_messages:
 			item = QtGui.QListWidgetItem(vk.id_to_name[user])
-                        item.setIcon(QtGui.QIcon(r"./data/pics/mail.png"))
+                        item.setIcon(self.mail_icon)
                         self.contactList.addItem(item)
                         showed.add(user)
 		
 		for user in names:
 			if user not in showed:
 				item = QtGui.QListWidgetItem(vk.id_to_name[user])
-				item.setIcon(QtGui.QIcon(r"./data/pics/online.png"))
+				item.setIcon(self.online_icon)
 				self.contactList.addItem(item)
 				showed.add(user)
 		for id in vk.id_to_name:
 			if id not in showed:
 				item = QtGui.QListWidgetItem(vk.id_to_name[id])
-                                item.setIcon(QtGui.QIcon(r"./data/pics/offline.png"))
+                                item.setIcon(self.offline_icon)
                                 self.contactList.addItem(item)
 
 	def RecieveNewMessages(self, msgs):
