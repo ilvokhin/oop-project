@@ -34,11 +34,6 @@
      <height>17</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
-   </property>
    <property name="text">
     <string>Hide offline contacts</string>
    </property>
@@ -65,11 +60,6 @@
      <height>17</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
-   </property>
    <property name="text">
     <string>Enable sound notifications</string>
    </property>
@@ -82,11 +72,6 @@
      <width>47</width>
      <height>16</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
    </property>
    <property name="text">
     <string>second(s)</string>
@@ -101,11 +86,6 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
-   </property>
    <property name="text">
     <string>second(s)</string>
    </property>
@@ -118,11 +98,6 @@
      <width>121</width>
      <height>16</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
    </property>
    <property name="text">
     <string>Update contact list every</string>
@@ -193,11 +168,6 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
-   </property>
    <property name="text">
     <string>Check for new messages every</string>
    </property>
@@ -210,11 +180,6 @@
      <width>61</width>
      <height>16</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
    </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;http://html-color-codes.info&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;What's this?&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -251,11 +216,6 @@
      <height>17</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
-   </property>
    <property name="text">
     <string>Load</string>
    </property>
@@ -268,11 +228,6 @@
      <width>108</width>
      <height>16</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
    </property>
    <property name="text">
     <string>messages from history</string>
@@ -312,11 +267,6 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
-   </property>
    <property name="text">
     <string>Own messages' color:</string>
    </property>
@@ -355,22 +305,15 @@
      <height>16</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>8</pointsize>
-    </font>
-   </property>
    <property name="text">
     <string>Friends' messages' color:</string>
    </property>
   </widget>
-  <zorder>loadCount</zorder>
-  <zorder>loadHistory</zorder>
-  <zorder>loadHistoryLabel</zorder>
-  <zorder>myColor</zorder>
-  <zorder>myColorLabel</zorder>
-  <zorder>friendsColor</zorder>
-  <zorder>friendsColorLabel</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
   <zorder>hideOffline</zorder>
   <zorder>apply</zorder>
   <zorder>enableSound</zorder>
