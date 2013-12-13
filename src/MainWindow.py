@@ -25,6 +25,8 @@ class MainWindow(QtGui.QMainWindow):
 		self.new_messages = {}
 		self.popup_man = PopUpMan()
 		
+		self.sound = QtGui.QSound(r"./data/sounds/bb2.mp3")
+		
 		# connect widgets and slots
 		self.loginButton.clicked.connect(self.loginButton_clicked)
                 self.contactList.itemDoubleClicked.connect (self.contactListEntry_doubleclicked)
@@ -104,6 +106,8 @@ class MainWindow(QtGui.QMainWindow):
 					and msg['mid'] not in old_messages[msg['uid']])
 				   ):
 					self.popup_man.create(msg['uid'], msg['mid'], msg['body'], cnt)
+					print "play"
+					self.sound.play()
 					cnt += 1
 				if msg['uid'] in self.new_messages:
  					self.new_messages[msg['uid']].append(msg['mid'])
