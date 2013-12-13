@@ -28,8 +28,8 @@ class VkOnTimeWorker(QtCore.QThread):
 			while not new_data:
 				try:
 					new_data = self.function(*self.args, **self.kwargs)
-				except SSLError, e:
-					print exception.message()
+				except ssl.SSLError as e:
+					print e.message
 			#if new_data != self.data:
 			self.data = new_data
 			self.emit(self.signal, self.data)
