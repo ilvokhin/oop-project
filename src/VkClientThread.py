@@ -8,6 +8,7 @@ import sys
 from PyQt4 import QtCore
 import vkontakte
 import time
+import ssl
 
 class VkOnTimeWorker(QtCore.QThread):
 	def __init__(self, sleep_time, signal_name, function, *args, **kwargs):
