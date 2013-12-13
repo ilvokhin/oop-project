@@ -27,6 +27,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.loginButton.clicked.connect(self.loginButton_clicked)
                 self.contactList.itemDoubleClicked.connect (self.contactListEntry_doubleclicked)
 
+                # TODO: add a button for configuration window
 		if self.registry.objects['config'].isLogin():
 			self.hide_loginButton()
 		
@@ -100,8 +101,7 @@ class MainWindow(QtGui.QMainWindow):
 			vk.markAsRead(mark_as_read)
 		if self.new_messages or mark_as_read:
 			self.UpdateContactList(vk.online)
-	
-        # proof of concept
+
         def contactListEntry_doubleclicked (self, entry):
                 name = entry.text()
 		vk = self.registry.objects['vk']
