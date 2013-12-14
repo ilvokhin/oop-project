@@ -36,6 +36,7 @@ class ChatTab (QtGui.QWidget):
 
 		# I know no other way to redefine childrens' functions. If someone does, please tell
 		self.chatLog.mouseReleaseEvent = lambda ev: self.open_url (QtCore.QPoint (ev.x(), ev.y()))
+
 	def open_url (self, click):
 		s = self.chatLog.anchorAt (click)
 		if s:
@@ -77,9 +78,13 @@ class ChatTab (QtGui.QWidget):
 				self.add_message(msg['body'], name)
 			else:
 				self.add_message(msg['body'])
+
 	def keyPressEvent(self, event):
-		if event.modifiers() and QtCore.Qt.ControlModifier and event.key() == QtCore.Qt.Key_Return:
-			self.send_message()
+		if event.modifiers() and QtCore.Qt.ControlModifier:
+			if event.key() == QtCore.Qt.Key_Return:
+				self.send_message()
+			elif event.key() == QtCore.Qt.Key_W:
+				self.closeButton.click()
 
 def main():
 		app = QtGui.QApplication(sys.argv)

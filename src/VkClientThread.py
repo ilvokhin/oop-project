@@ -87,27 +87,27 @@ class VkClientThread(QtCore.QThread):
 		#print self.messages
 		self.emit(self.recieveMessagesForMainWindow, self.messages)
 
-        def getServerTime(self):
-                """Test function to check connection to vk.com server."""
-                return self.vk.GetServerTime()
+	def getServerTime(self):
+		"""Test function to check connection to vk.com server."""
+		return self.vk.GetServerTime()
 
-        def getAllFriends(self):
-                """Return list *only* with users ids."""
-                return self.vk.friends.get()
+	def getAllFriends(self):
+		"""Return list *only* with users ids."""
+		return self.vk.friends.get()
 
-        def getUserInfo(self, user_id):
-                """Return dict with user info. 
-                Example: {u'first_name': u'Pavel', u'last_name': u'Durov', u'uid': 1}"""
-                return self.vk.users.get(uid = user_id)[0]
+	def getUserInfo(self, user_id):
+		"""Return dict with user info.
+		Example: {u'first_name': u'Pavel', u'last_name': u'Durov', u'uid': 1}"""
+		return self.vk.users.get(uid = user_id)[0]
 
-        def getUsersInfo(self, users_id):
-                """Return list of dicts with users info.
-                Example: [{u'first_name': u'Pavel', u'last_name': u'Durov', u'uid': 1}]"""
-                uids_str = ', '.join(str(elem) for elem in users_id)
-                return self.vk.users.get(uids=uids_str)
+	def getUsersInfo(self, users_id):
+		"""Return list of dicts with users info.
+		Example: [{u'first_name': u'Pavel', u'last_name': u'Durov', u'uid': 1}]"""
+		uids_str = ', '.join(str(elem) for elem in users_id)
+		return self.vk.users.get(uids=uids_str)
 
-        def sendMessage(self, uid, message):
-                return self.vk.messages.send(uid = uid, message = message)
+	def sendMessage(self, uid, message):
+		return self.vk.messages.send(uid = uid, message = message)
 	
 	def markAsRead(self, mids):
 		mids_str = ', '.join(str(elem) for elem in mids)
@@ -115,14 +115,19 @@ class VkClientThread(QtCore.QThread):
 	
 	def getHistory(self, uid, count = 3, rev = 0):
 		"""Return list of dict with history"""
-		history = self.vk.messages.getHistory(uid = uid, count = count, rev = rev)
+		history = None
+		while not history:
+			try:
+				history = self.vk.messages.getHistory(uid = uid, count = count, rev = rev)
+			except ssl.SSLError as e:
+				print e.message
+
 		history.pop(0)
 		return reversed(history)
 
 def main():
 	vk = VkClientThread('')
 	app = QtGui.QApplication(sys.argv)
-	
 	sys.exit(app.exec_())
 
 if __name__ == "__main__":
