@@ -7,66 +7,86 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 from PyQt4 import uic
 
-from PyQt4.QtCore import QString
 from Registry import Registry
 from VkClientThread import VkClientThread
 
+def markUrl (msg, proto):
+	pos = 0
+	while msg.indexOf (proto, pos) != -1:
+		urlStart = msg.indexOf (proto, pos)
+		urlEnd = msg.indexOf (" ", urlStart)
+		if urlEnd == -1:
+			urlEnd = msg.size()
+		url = msg.mid (urlStart, urlEnd - urlStart)
+		msg.insert (urlEnd, "\">" + url + "</a>")
+		msg.insert (urlStart, "<a href=\"")
+		pos = 15 + urlStart + 2*url.size() # 15 is the length of <a href=""></a>
+	return msg
+
 class ChatTab (QtGui.QWidget):
-    def __init__(self, id, parent = None):
-        QtGui.QWidget.__init__(self, parent)
-        self.ui = uic.loadUi (("./ui/chatTab.ui"), self)
-        self.closeButton.clicked.connect(self.closeButton_clicked)
-        self.messageField.textChanged.connect (self.text_changed)
-        self.sendButton.clicked.connect(self.send_message)
-        self.id = id
-	
-	reg = Registry()
-        self.vk = reg.objects['vk']
+	def __init__(self, id, parent = None):
+		QtGui.QWidget.__init__(self, parent)
+		self.ui = uic.loadUi (("./ui/chatTab.ui"), self)
+		self.closeButton.clicked.connect(self.closeButton_clicked)
+		self.messageField.textChanged.connect (self.text_changed)
+		self.sendButton.clicked.connect(self.send_message)
+		self.id = id
+		reg = Registry()
+		self.vk = reg.objects['vk']
 
-    def closeButton_clicked (self):
-        self.close()
-        self.closeButton.raise_()
+		# I know no other way to redefine childrens' functions. If someone does, please tell
+		self.chatLog.mouseReleaseEvent = lambda ev: self.open_url (QtCore.QPoint (ev.x(), ev.y()))
+	def open_url (self, click):
+		s = self.chatLog.anchorAt (click)
+		if s:
+			QtGui.QDesktopServices.openUrl (QtCore.QUrl (s))
 
-    def text_changed (self):
-        st = self.messageField.toPlainText()
-        if st.size() > 0:
-            self.sendButton.setEnabled (True)
-        else:
-            self.sendButton.setEnabled (False)
+	def closeButton_clicked (self):
+		self.close()
+		self.closeButton.raise_()
 
-    def add_message(self, msg, name = "me"):
-        self.chatLog.append("<b>" + name + ":</b> " + msg)
-
-    def send_message (self):
-        msg = self.messageField.toPlainText()
-	if( msg):
-		self.vk.sendMessage(self.id, unicode(msg))
-		self.messageField.clear()
-		self.add_message(msg)
-		self.messageField.setFocus()
-
-    def load_history(self, uid, count = 3):
-	reg = Registry()
-	self.vk = reg.objects['vk']
-	msgs = self.vk.getHistory(uid)
-	
-	name = self.vk.id_to_name[uid]
-	
-	for msg in msgs:
-		if msg['uid'] == uid:
-			self.add_message(msg['body'], name)
+	def text_changed (self):
+		st = self.messageField.toPlainText()
+		if st.size() > 0:
+			self.sendButton.setEnabled (True)
 		else:
-			self.add_message(msg['body'])
-    def keyPressEvent(self, event):
-        if event.modifiers() and QtCore.Qt.ControlModifier and event.key() == QtCore.Qt.Key_Return:
-		self.send_message()
+			self.sendButton.setEnabled (False)
+
+	def add_message(self, msg, name = "me"):
+		# if you are going to mark up more protocols, start with shorter ones
+		msg = QtCore.QString (msg)
+		msg = markUrl (markUrl (msg, "http://"), "https://")
+		self.chatLog.append("<b>" + name + ":</b> " + msg)
+
+	def send_message (self):
+		msg = self.messageField.toPlainText()
+		if( msg):
+			self.vk.sendMessage(self.id, unicode(msg))
+			self.messageField.clear()
+			self.add_message(msg)
+			self.messageField.setFocus()
+
+	def load_history(self, uid, count = 3):
+		reg = Registry()
+		self.vk = reg.objects['vk']
+		msgs = self.vk.getHistory(uid)
+		name = self.vk.id_to_name[uid]
+	
+		for msg in msgs:
+			if msg['uid'] == uid:
+				self.add_message(msg['body'], name)
+			else:
+				self.add_message(msg['body'])
+	def keyPressEvent(self, event):
+		if event.modifiers() and QtCore.Qt.ControlModifier and event.key() == QtCore.Qt.Key_Return:
+			self.send_message()
 
 def main():
-        app = QtGui.QApplication(sys.argv)
-        w = ChatTab()
-        w.show()
-        w.raise_()
-        sys.exit(app.exec_())
+		app = QtGui.QApplication(sys.argv)
+		w = ChatTab()
+		w.show()
+		w.raise_()
+		sys.exit(app.exec_())
 
 if __name__ == "__main__":
-        main()
+		main()
