@@ -25,7 +25,7 @@ class MainWindow(QtGui.QMainWindow):
 		self.new_messages = {}
 		self.popup_man = PopUpMan()
 		
-		self.sound = QtGui.QSound(r"./data/sounds/bb2.mp3")
+                self.sound = QtGui.QSound(r"./data/sounds/bb2.wav")
 		self.online_icon = QtGui.QIcon(r"./data/pics/online.png")
 		self.offline_icon = QtGui.QIcon(r"./data/pics/offline.png") 
 		self.mail_icon = QtGui.QIcon(r"./data/pics/mail.png")
