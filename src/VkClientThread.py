@@ -9,6 +9,7 @@ from PyQt4 import QtCore
 import vkontakte
 import time
 import ssl
+from Registry import Registry
 
 class VkOnTimeWorker(QtCore.QThread):
 	def __init__(self, sleep_time, signal_name, function, *args, **kwargs):
@@ -50,11 +51,14 @@ class VkClientThread(QtCore.QThread):
 		self.initContacts()
 	
 	def run(self):
-		self.online_checker = VkOnTimeWorker(1 * 60, "updateOnline", self.vk.friends.getOnline)
+		updMsg = Registry().objects['config'].config['messagesTimeout']
+		updCnt = Registry().objects['config'].config['contactsTimeout']
+
+		self.online_checker = VkOnTimeWorker(updCnt, "updateOnline", self.vk.friends.getOnline)
 		self.connect(self.online_checker, self.online_checker.signal, self.updateOnline)
 		self.online_checker.start()
 		
-		self.message_checker = VkOnTimeWorker(3, "recieveMessages", self.vk.messages.get, filters = 1)
+		self.message_checker = VkOnTimeWorker(updMsg, "recieveMessages", self.vk.messages.get, filters = 1)
 		self.connect(self.message_checker, self.message_checker.signal, self.recieveMessages)
 		self.message_checker.start()
 		
@@ -77,10 +81,7 @@ class VkClientThread(QtCore.QThread):
 	def updateOnline(self, online):
 		self.online = online
 		#print self.online
-		#for uid in self.online:
-		#online_id.append(self.id_to_name[uid['uid']])
 		self.emit(self.updateOnlineForMainWindow, self.online)
-		#self.emit(self.updateOnlineForMainWindow, self.online)
 	
 	def recieveMessages(self, msgs):
 		self.messages = msgs

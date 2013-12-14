@@ -13,42 +13,55 @@ from Registry import Registry
 from Config import Config
 from ChatWindow import ChatWindow
 from PopUp import PopUpMan
+from ConfigWindow import ConfigWindow
 
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self, parent = None):
 		QtGui.QMainWindow.__init__(self, parent)
 		self.ui = uic.loadUi(("./ui/mainwindow.ui"), self)
-		# init
 		
 		self.registry = Registry()
 		self.registry.objects['config'] = Config()
+		self.conf = self.registry.objects['config']
 		self.new_messages = {}
 		self.popup_man = PopUpMan()
 		
-                self.sound = QtGui.QSound(r"./data/sounds/bb2.wav")
+		self.sound = QtGui.QSound(r"./data/sounds/bb2.wav")
 		self.online_icon = QtGui.QIcon(r"./data/pics/online.png")
 		self.offline_icon = QtGui.QIcon(r"./data/pics/offline.png") 
 		self.mail_icon = QtGui.QIcon(r"./data/pics/mail.png")
 		
 		# connect widgets and slots
 		self.loginButton.clicked.connect(self.loginButton_clicked)
-                self.contactList.itemDoubleClicked.connect (self.contactListEntry_doubleclicked)
-		self.connect(self.popup_man, self.popup_man.signal, self.openChatTabFromPopUp)
+		self.optionsButton.clicked.connect(self.openConfigWindow)
+		self.contactList.itemDoubleClicked.connect (self.openChatWindow)
+		self.connect (self.popup_man, self.popup_man.signal, self.openChatTabFromPopUp)
 
-                # TODO: add a button for configuration window
 		if self.registry.objects['config'].isLogin():
-			self.hide_loginButton()
+			self.change_login_button()
 		
 	# widgets handlers
 	def loginButton_clicked(self):
-		self.loginWidget = LoginWidget(self)
-		self.loginWidget.show()
-		self.loginWidget.raise_()
+		if self.loginButton.text() == 'Login':
+			self.loginWidget = LoginWidget(self)
+			self.loginWidget.show()
+			self.loginWidget.raise_()
+		else:
+			self.close()
+
+	def openConfigWindow (self):
+		self.w = ConfigWindow(self)
+		self.w.show()
+		self.w.raise_()
+
 	# other methods
-	def hide_loginButton(self):
- 		self.loginButton.hide()
-                self.ui.layout().update()
+	def change_login_button(self):
+		self.loginButton.setText ("Quit")
+		self.ui.layout().update()
 	
+	def updateConfig (self):
+		self.conf = self.registry.objects['config']
+
 	def server_connection_init(self):
 		self.registry.objects['vk'] = VkClientThread(self.registry.objects['config'].config['token'])
 		vk = self.registry.objects['vk']
@@ -68,9 +81,9 @@ class MainWindow(QtGui.QMainWindow):
 		# TODO: fix if user is not friend
 		for user in self.new_messages:
 			item = QtGui.QListWidgetItem(vk.id_to_name[user])
-                        item.setIcon(self.mail_icon)
-                        self.contactList.addItem(item)
-                        showed.add(user)
+			item.setIcon(self.mail_icon)
+			self.contactList.addItem(item)
+			showed.add(user)
 		
 		for user in names:
 			if user not in showed:
@@ -81,8 +94,8 @@ class MainWindow(QtGui.QMainWindow):
 		for id in vk.id_to_name:
 			if id not in showed:
 				item = QtGui.QListWidgetItem(vk.id_to_name[id])
-                                item.setIcon(self.offline_icon)
-                                self.contactList.addItem(item)
+				item.setIcon(self.offline_icon)
+				self.contactList.addItem(item)
 
 	def RecieveNewMessages(self, msgs):
 		vk = self.registry.objects['vk']
@@ -109,8 +122,9 @@ class MainWindow(QtGui.QMainWindow):
 					and msg['mid'] not in old_messages[msg['uid']])
 				   ):
 					self.popup_man.create(msg['uid'], msg['mid'], msg['body'], cnt)
-					print "play"
-					self.sound.play()
+					if self.conf.config['enableSound']:
+						print "play"
+						self.sound.play()
 					cnt += 1
 				if msg['uid'] in self.new_messages:
  					self.new_messages[msg['uid']].append(msg['mid'])
@@ -132,27 +146,37 @@ class MainWindow(QtGui.QMainWindow):
 	def openChatTabFromPopUp(self, id):
 		vk = self.registry.objects['vk']
 		vk.markAsRead(self.new_messages[id])
-                self.openChatTab(id, len(self.new_messages[id]))
-                del self.new_messages[id]
+
+		reg = Registry()
+		loadHistory = reg.objects['config'].config['loadHistory']
+		if loadHistory:
+			historyCount = reg.objects['config'].config['historyCount']
+		else:
+			historyCount = 0
+
+		self.openChatTab(id, len(self.new_messages[id]) + historyCount)
+		del self.new_messages[id]
 		self.UpdateContactList(vk.online)
 		print "open chattab from popup", id
 	
-        def contactListEntry_doubleclicked (self, entry):
-                name = entry.text()
+	def openChatWindow (self, entry):
+		name = entry.text()
 		vk = self.registry.objects['vk']
-		#if not hasattr(self, 'ChatWindow'):
-		#	self.ChatWindow = ChatWindow()
-                id = vk.name_to_id[unicode (name)]
+		id = vk.name_to_id[unicode (name)]
+
+		reg = Registry()
+		loadHistory = reg.objects['config'].config['loadHistory']
+		if loadHistory:
+			historyCount = reg.objects['config'].config['historyCount']
+		else:
+			historyCount = 0
 		if id in self.new_messages:
-			#self.ChatWindow.addChatTab (id, name, len(self.new_messages[id]))
 			vk.markAsRead(self.new_messages[id])
-			self.openChatTab(id, len(self.new_messages[id]))
+			self.openChatTab(id, len(self.new_messages[id]) + historyCount)
 			del self.new_messages[id]
 			self.UpdateContactList(vk.online)
 		else:
-                 	#self.ChatWindow.addChatTab (id, name)
-			self.openChatTab(id)
-                #self.ChatWindow.show()
+			self.openChatTab(id, historyCount)
  
 
 def main():

@@ -32,8 +32,8 @@ class LoginWidget(QtGui.QWidget):
  		if 'access_token' in at:
 			self.registry = Registry()
 			self.registry.objects['config'].update('token', at['access_token'][0])
-			self.parent.hide_loginButton()
-			self.parent.contact_list_init()
+			self.parent.change_login_button()
+			self.parent.server_connection_init()
 			self.close()
 		
 	# other methods

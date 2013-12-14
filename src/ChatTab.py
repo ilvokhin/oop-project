@@ -57,7 +57,11 @@ class ChatTab (QtGui.QWidget):
 		# if you are going to mark up more protocols, start with shorter ones
 		msg = QtCore.QString (msg)
 		msg = markUrl (markUrl (msg, "http://"), "https://")
-		self.chatLog.append("<b>" + name + ":</b> " + msg)
+		if name == "me":
+			color = Registry().objects['config'].config['myColor']
+		else:
+			color = Registry().objects['config'].config['friendsColor']
+		self.chatLog.append ("<b><font color=\"#" + color + "\">" + name + ":</font></b> " + msg)
 
 	def send_message (self):
 		msg = self.messageField.toPlainText()
@@ -70,7 +74,7 @@ class ChatTab (QtGui.QWidget):
 	def load_history(self, uid, count = 3):
 		reg = Registry()
 		self.vk = reg.objects['vk']
-		msgs = self.vk.getHistory(uid)
+		msgs = self.vk.getHistory(uid, count)
 		name = self.vk.id_to_name[uid]
 	
 		for msg in msgs:

@@ -12,12 +12,20 @@ class Config(object):
 		if os.path.exists(self.config_file_path):
 			with open(self.config_file_path) as f:
 				self.config = pickle.load(f)
-			if 'token' in self.config:
-				self.config['is_login'] = True
+				if 'token' in self.config:
+					self.config['is_login'] = True
 		else:
-			# add default values to config file
+			self.update ('enableSound', False)
+			self.update ('showOffline', True)
+			self.update ('loadHistory', True)
+			self.update ('contactsTimeout', 30)
+			self.update ('messagesTimeout', 2)
+			self.update ('historyCount', 3)
+			self.update ('myColor', '000000')
+			self.update ('friendsColor', '000000')
+			self.save()
 			pass
-	
+
 	def isLogin(self):
 		return self.config['is_login']
 	
