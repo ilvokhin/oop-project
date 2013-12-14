@@ -30,7 +30,8 @@ class VkOnTimeWorker(QtCore.QThread):
 			while not new_data:
 				try:
 					new_data = self.function(*self.args, **self.kwargs)
-				except ssl.SSLError as e:
+				except Exception as e:
+				#except ssl.SSLError as e:
 					print e.message
 			#if new_data != self.data:
 			self.data = new_data
@@ -120,7 +121,8 @@ class VkClientThread(QtCore.QThread):
 		while not history:
 			try:
 				history = self.vk.messages.getHistory(uid = uid, count = count, rev = rev)
-			except ssl.SSLError as e:
+			#except ssl.SSLError as e:
+			except Exception as e:
 				print e.message
 
 		history.pop(0)
