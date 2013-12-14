@@ -8,15 +8,15 @@ class PopUp(QtGui.QWidget):
 	def __init__(self, id, mid, msg, count, time = 2000, parent = None):
 		QtGui.QWidget.__init__(self, parent)
 		self.ui = uic.loadUi(("./ui/PopUp.ui"), self)
-		self.setWindowFlags(self.windowFlags() | QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+                self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.CustomizeWindowHint)
 		self.setFocusPolicy(QtCore.Qt.NoFocus)
 		self.timer = QtCore.QTimer
 		self.count = count
 		self.time = time
 		self.id = id
 		self.mid = mid
-		self.signal = QtCore.SIGNAL("openTab")
-		
+                self.signal = QtCore.SIGNAL("openTab")
+
 		if len(msg) > 50:
 			msg = msg[0:50] + "..."
  		self.ui.messageLabel.setText(msg)
