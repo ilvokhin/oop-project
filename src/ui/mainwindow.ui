@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>180</width>
-    <height>416</height>
+    <height>428</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,28 +19,8 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <widget class="QPushButton" name="loginButton">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="text">
-       <string>Login</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
+    <item row="0" column="0">
      <widget class="QListWidget" name="contactList"/>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="optionsButton">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="text">
-       <string>Options</string>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>
@@ -53,8 +33,45 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLogin"/>
+    <addaction name="actionOptions"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLogin">
+   <property name="text">
+    <string>Login</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="text">
+    <string>Options</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

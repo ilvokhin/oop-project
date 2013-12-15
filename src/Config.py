@@ -26,7 +26,7 @@ class Config(object):
 			self.save()
 			pass
 
-	def isLogin(self):
+	def isLoggedIn(self):
 		return self.config['isLoggedIn']
 	
 	def save(self):

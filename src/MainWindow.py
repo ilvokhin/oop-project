@@ -23,7 +23,7 @@ from ConfigWindow import ConfigWindow
 class MainWindow(QtGui.QMainWindow):
 	def __init__(self, parent = None):
 		QtGui.QMainWindow.__init__(self, parent)
-		self.ui = uic.loadUi(("./ui/mainwindow.ui"), self)
+		self.ui = uic.loadUi("./ui/mainwindow.ui", self)
 		
 		self.registry = Registry()
 		self.registry.objects['config'] = Config()
@@ -36,26 +36,24 @@ class MainWindow(QtGui.QMainWindow):
 		self.offline_icon = QtGui.QIcon(r"./data/pics/offline.png") 
 		self.mail_icon = QtGui.QIcon(r"./data/pics/mail.png")
 		
-		# connect widgets and slots
-		self.loginButton.clicked.connect(self.loginButton_clicked)
-		self.optionsButton.clicked.connect(self.openConfigWindow)
+		# connect signals and slots
+		self.actionLogin.triggered.connect(self.login)
+		self.actionExit.triggered.connect (self.close)
+		self.actionOptions.triggered.connect(self.openConfigWindow)
 		self.contactList.itemDoubleClicked.connect (self.openChatWindow)
 		self.connect (self.popup_man, self.popup_man.signal, self.openChatTabFromPopUp)
 
-		if self.registry.objects['config'].isLogin():
-			self.change_login_button()
+		if self.registry.objects['config'].isLoggedIn():
+			self.actionLogin.setEnabled (False)
 		
 	# widgets handlers
-	def loginButton_clicked(self):
-		if self.loginButton.text() == 'Login':
-			if not hasattr (self, 'loginWidget') or not self.loginWidget.isVisible():
-				self.loginWidget = LoginWidget(self)
-				self.loginWidget.show()
-				self.loginWidget.raise_()
-			else:
-				self.loginWidget.activateWindow()
+	def login (self):
+		if not hasattr (self, 'loginWidget') or not self.loginWidget.isVisible():
+			self.loginWidget = LoginWidget(self)
+			self.loginWidget.show()
+			self.loginWidget.raise_()
 		else:
-			self.close()
+			self.loginWidget.activateWindow()
 
 	def openConfigWindow (self):
 		if not hasattr (self, 'w') or not self.w.isVisible():
@@ -66,31 +64,24 @@ class MainWindow(QtGui.QMainWindow):
 			self.w.activateWindow()
 
 	# other methods
-	def change_login_button(self):
-		self.loginButton.setText ("Quit")
-		self.ui.layout().update()
-	
 	def updateConfig (self):
 		self.conf = self.registry.objects['config']
-		vk = self.registry.objects['vk']
-		self.UpdateContactList(vk.online)
+		if 'vk' in self.registry.objects:
+			vk = self.registry.objects['vk']
+			self.UpdateContactList(vk.online)
 
 	def server_connection_init(self):
-		self.registry.objects['vk'] = VkClientThread(self.registry.objects['config'].config['token'])
+		self.registry.objects['vk'] = VkClientThread(self.conf.config['token'])
 		vk = self.registry.objects['vk']
-		
 		vk.start()
-		
 		self.connect(vk, vk.updateOnlineForMainWindow, self.UpdateContactList)
 		self.connect(vk, vk.recieveMessagesForMainWindow, self.RecieveNewMessages)
 		
 	def UpdateContactList(self, names):
 		self.contactList.clear()
-		
  		vk = self.registry.objects['vk']
-		
 		showed = set()
-		
+
 		# TODO: fix if user is not friend
 		for user in self.new_messages:
 			item = QtGui.QListWidgetItem(vk.id_to_name[user])
@@ -119,7 +110,7 @@ class MainWindow(QtGui.QMainWindow):
 		mark_as_read = []
 		old_messages = self.new_messages
 		cnt = 0
-		#self.new_messages.clear()
+
 		self.new_messages = {}
 		for msg in reversed(msgs):
 			if hasattr(self, 'ChatWindow') and msg['uid'] in self.ChatWindow.tabs:
@@ -132,7 +123,7 @@ class MainWindow(QtGui.QMainWindow):
 			else:
 				#Change icon in contact list
   				print "Chat doesn't open"
-				print msg
+				#print msg
 				if (msg['uid'] not in old_messages or
 					(msg['uid'] in old_messages 
 					and msg['mid'] not in old_messages[msg['uid']])
@@ -201,7 +192,7 @@ def main():
 	w.show()
 	w.raise_()
 	# TODO: Use threads? Gevent?
-	if w.registry.objects['config'].isLogin():
+	if w.registry.objects['config'].isLoggedIn():
  		w.server_connection_init()
   	
 	sys.exit(app.exec_())
