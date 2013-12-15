@@ -1,15 +1,18 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*
 
+# Windows requires some weird kind of workaround to show the application icon in the taskbar
+import ctypes
+myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
 import sys
 
 from PyQt4 import QtGui
 from PyQt4 import uic
-
 from VkClientThread import VkClientThread
 from LoginWidget import LoginWidget
 from Registry import Registry
-#from VkClient import VkClient
 from Config import Config
 from ChatWindow import ChatWindow
 from PopUp import PopUpMan

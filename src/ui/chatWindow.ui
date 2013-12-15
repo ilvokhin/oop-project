@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>TabWidget</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../data/pics/icon.png</normaloff>../data/pics/icon.png</iconset>
+  </property>
   <property name="currentIndex">
    <number>-1</number>
   </property>
