@@ -3,8 +3,10 @@
 
 # Windows requires some weird kind of workaround to show the application icon in the taskbar
 import ctypes
-myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+import platform
+if platform.system() == 'Windows':
+	myappid = 'mycompany.myproduct.subproduct.version' # arbitrary string
+	ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 import sys
 
