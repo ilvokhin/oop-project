@@ -38,7 +38,7 @@ class PopUpMan(QtCore.QThread):
 	def __init__(self):
 		QtCore.QThread.__init__(self)
 		self.popups = {}
-		self.signal = self.signal = QtCore.SIGNAL("openTabMainWindow")
+		self.signal = QtCore.SIGNAL("openTabMainWindow")
 
 	def create(self, id, mid, msg, count, time = 3000):
 		self.popups[(id, mid)] = PopUp(id, mid, msg, count, time)
