@@ -8,15 +8,14 @@ from PyQt4 import QtGui
 from PyQt4 import uic
 
 from PyQt4.QtGui import QTabWidget
-from PyQt4.QtCore import QString
 from Registry import Registry
 from VkClientThread import VkClientThread
 from ChatTab import ChatTab
 
 class ChatWindow (QTabWidget):
-	def __init__(self, parent = None):
-		QTabWidget.__init__(self, parent)
-		self.ui = uic.loadUi(("./ui/chatWindow.ui"), self)
+	def __init__(self):
+		QTabWidget.__init__(self, None)
+		self.ui = uic.loadUi ("./ui/chatWindow.ui", self)
 		self.currentChanged.connect (self.resetTitle)
 		self.connect(self, QtCore.SIGNAL('triggered()'), self.closeEvent)
 		# user ID -> tab number
@@ -37,7 +36,7 @@ class ChatWindow (QTabWidget):
 		self.widget(self.tabs[id]).messageField.setFocus()
 
 	def getTab(self, uid):
-		return self.widget( self.tabs[uid] )
+		return self.widget (self.tabs[uid])
 
 	def closeButton_clicked (self):
 		idx = self.currentIndex()
@@ -47,7 +46,7 @@ class ChatWindow (QTabWidget):
 		if (self.count() == 0):
 			self.close()
 		else:
-			self.widget(self.currentIndex()).messageField.setFocus(True)
+			self.widget(self.currentIndex()).messageField.setFocus()
 
 	def resetTitle (self, id):
 		self.setWindowTitle (self.tabText (id))

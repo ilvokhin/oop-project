@@ -8,12 +8,12 @@ class Config(object):
 	def __init__(self):
 		self.config_file_path = "./data/config.conf"
 		self.config = {}
-		self.config['is_login'] = False
+		self.config['isLoggedIn'] = False
 		if os.path.exists(self.config_file_path):
 			with open(self.config_file_path) as f:
 				self.config = pickle.load(f)
 				if 'token' in self.config:
-					self.config['is_login'] = True
+					self.config['isLoggedIn'] = True
 		else:
 			self.update ('enableSound', False)
 			self.update ('showOffline', True)
@@ -27,7 +27,7 @@ class Config(object):
 			pass
 
 	def isLogin(self):
-		return self.config['is_login']
+		return self.config['isLoggedIn']
 	
 	def save(self):
 		with open(self.config_file_path, 'w+') as f:
@@ -36,7 +36,7 @@ class Config(object):
 	def update(self, key, value):
 		self.config[key] = value;
 		if key == 'token':
-			self.config['is_login'] = True
+			self.config['isLoggedIn'] = True
 		self.save()
 		
 

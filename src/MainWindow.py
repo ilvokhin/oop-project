@@ -43,16 +43,22 @@ class MainWindow(QtGui.QMainWindow):
 	# widgets handlers
 	def loginButton_clicked(self):
 		if self.loginButton.text() == 'Login':
-			self.loginWidget = LoginWidget(self)
-			self.loginWidget.show()
-			self.loginWidget.raise_()
+			if not hasattr (self, 'loginWidget') or not self.loginWidget.isVisible():
+				self.loginWidget = LoginWidget(self)
+				self.loginWidget.show()
+				self.loginWidget.raise_()
+			else:
+				self.loginWidget.activateWindow()
 		else:
 			self.close()
 
 	def openConfigWindow (self):
-		self.w = ConfigWindow(self)
-		self.w.show()
-		self.w.raise_()
+		if not hasattr (self, 'w') or not self.w.isVisible():
+			self.w = ConfigWindow(self)
+			self.w.show()
+			self.w.raise_()
+		else:
+			self.w.activateWindow()
 
 	# other methods
 	def change_login_button(self):
@@ -61,6 +67,8 @@ class MainWindow(QtGui.QMainWindow):
 	
 	def updateConfig (self):
 		self.conf = self.registry.objects['config']
+		vk = self.registry.objects['vk']
+		self.UpdateContactList(vk.online)
 
 	def server_connection_init(self):
 		self.registry.objects['vk'] = VkClientThread(self.registry.objects['config'].config['token'])
@@ -91,11 +99,14 @@ class MainWindow(QtGui.QMainWindow):
 				item.setIcon(self.online_icon)
 				self.contactList.addItem(item)
 				showed.add(user)
-		for id in vk.id_to_name:
-			if id not in showed:
-				item = QtGui.QListWidgetItem(vk.id_to_name[id])
-				item.setIcon(self.offline_icon)
-				self.contactList.addItem(item)
+
+		conf = Registry().objects['config']
+		if conf.config['showOffline']:
+			for id in vk.id_to_name:
+				if id not in showed:
+					item = QtGui.QListWidgetItem(vk.id_to_name[id])
+					item.setIcon(self.offline_icon)
+					self.contactList.addItem(item)
 
 	def RecieveNewMessages(self, msgs):
 		vk = self.registry.objects['vk']

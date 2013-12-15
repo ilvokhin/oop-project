@@ -24,15 +24,15 @@ def markUrl (msg, proto):
 	return msg
 
 class ChatTab (QtGui.QWidget):
-	def __init__(self, id, parent = None):
-		QtGui.QWidget.__init__(self, parent)
-		self.ui = uic.loadUi (("./ui/chatTab.ui"), self)
-		self.closeButton.clicked.connect(self.closeButton_clicked)
+	def __init__(self, id):
+		QtGui.QWidget.__init__(self, None)
+		self.ui = uic.loadUi ("./ui/chatTab.ui", self)
+		self.closeButton.clicked.connect (self.closeButton_clicked)
 		self.messageField.textChanged.connect (self.text_changed)
-		self.sendButton.clicked.connect(self.send_message)
+		self.sendButton.clicked.connect (self.send_message)
 		self.id = id
-		reg = Registry()
-		self.vk = reg.objects['vk']
+		self.reg = Registry()
+		self.vk = self.reg.objects['vk']
 
 		# I know no other way to redefine childrens' functions. If someone does, please tell
 		self.chatLog.mouseReleaseEvent = lambda ev: self.open_url (QtCore.QPoint (ev.x(), ev.y()))
@@ -44,36 +44,32 @@ class ChatTab (QtGui.QWidget):
 
 	def closeButton_clicked (self):
 		self.close()
-		self.closeButton.raise_()
 
 	def text_changed (self):
 		st = self.messageField.toPlainText()
-		if st.size() > 0:
-			self.sendButton.setEnabled (True)
-		else:
-			self.sendButton.setEnabled (False)
+		self.sendButton.setEnabled (st.size() > 0)
 
 	def add_message(self, msg, name = "me"):
 		# if you are going to mark up more protocols, start with shorter ones
 		msg = QtCore.QString (msg)
 		msg = markUrl (markUrl (msg, "http://"), "https://")
+
+		conf = self.reg.objects['config']
 		if name == "me":
-			color = Registry().objects['config'].config['myColor']
+			color = conf.config['myColor']
 		else:
-			color = Registry().objects['config'].config['friendsColor']
+			color = conf.config['friendsColor']
 		self.chatLog.append ("<b><font color=\"#" + color + "\">" + name + ":</font></b> " + msg)
 
 	def send_message (self):
 		msg = self.messageField.toPlainText()
-		if( msg):
-			self.vk.sendMessage(self.id, unicode(msg))
+		if msg:
+			self.vk.sendMessage (self.id, unicode(msg))
 			self.messageField.clear()
 			self.add_message(msg)
 			self.messageField.setFocus()
 
-	def load_history(self, uid, count = 3):
-		reg = Registry()
-		self.vk = reg.objects['vk']
+	def load_history (self, uid, count = 3):
 		msgs = self.vk.getHistory(uid, count)
 		name = self.vk.id_to_name[uid]
 	

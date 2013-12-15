@@ -30,6 +30,7 @@ class ConfigWindow (QtGui.QWidget):
 		Registry().objects['config'] = Config()
 		self.conf = Registry().objects['config']
 		self.ui = uic.loadUi(("./ui/ConfigWindow.ui"), self)
+		self.setWindowFlags (QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
 		self.colorHelp.linkActivated.connect (self.open_browser)
 
 		self.local = self.conf.config

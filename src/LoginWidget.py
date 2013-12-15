@@ -14,14 +14,13 @@ from Registry import Registry
 class LoginWidget(QtGui.QWidget):
 	def __init__(self, parent = None):
 		QtGui.QWidget.__init__(self, None)
-		uic.loadUi(("./ui/loginwidget.ui"), self)
+		uic.loadUi ("./ui/loginwidget.ui", self)
 		# connect widgets
 		self.parent = parent
 		self.webView.urlChanged.connect(self.webView_urlChanged)
 		self.load_login_page()
 	
 	# widgets handlers
-	
 	def webView_urlChanged(self, url):
 		new_url = str(url.toString())
 		parsed_url = urlparse.urlparse(new_url)
