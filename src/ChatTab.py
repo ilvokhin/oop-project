@@ -36,6 +36,7 @@ class ChatTab (QtGui.QWidget):
 
 		# I know no other way to redefine childrens' functions. If someone does, please tell
 		self.chatLog.mouseReleaseEvent = lambda ev: self.open_url (QtCore.QPoint (ev.x(), ev.y()))
+		self.resetIcon = QtCore.SIGNAL ('resetIcon')
 
 	def open_url (self, click):
 		s = self.chatLog.anchorAt (click)

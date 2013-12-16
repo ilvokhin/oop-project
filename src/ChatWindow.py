@@ -29,14 +29,25 @@ class ChatWindow (QTabWidget):
 			self.addTab (tab, name)
 			tab.load_history(id, history_cnt)
 
+			# yes, I am cheating on you
+			tab.chatLog.mousePressEvent = lambda ev: tab.emit (tab.resetIcon)
+			tab.messageField.mousePressEvent = lambda ev: tab.emit (tab.resetIcon)
+			self.connect (tab, tab.resetIcon, self.resetTabIcon)
+
 		self.setCurrentIndex (self.tabs[id])
 		if self.isMinimized():
 			self.showNormal()
 		self.activateWindow()
 		self.widget(self.tabs[id]).messageField.setFocus()
 
+	def resetTabIcon (self):
+		self.setTabIcon (self.currentIndex(), QtGui.QIcon())
+
 	def getTab(self, uid):
 		return self.widget (self.tabs[uid])
+
+	def currentIndexChanged (self, idx):
+		self.setTabIcon (idx, QtGui.QIcon())
 
 	def closeButton_clicked (self):
 		idx = self.currentIndex()

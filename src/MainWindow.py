@@ -140,6 +140,8 @@ class MainWindow(QtGui.QMainWindow):
  					self.ChatWindow.getTab(msg['uid']).add_message(msg['body'], name)
  	 				mark_as_read.append(msg['mid'])
 				if not self.ChatWindow.widget(self.ChatWindow.tabs[uid]).isActiveWindow():
+					self.ChatWindow.setTabIcon (self.ChatWindow.tabs[uid], self.mail_icon)
+					self.popup_man.create(msg['uid'], msg['mid'], msg['body'], cnt)
 					self.sound.play()
 
 			else:
