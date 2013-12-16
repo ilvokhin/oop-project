@@ -11,6 +11,7 @@ if platform.system() == 'Windows':
 import sys
 
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 from PyQt4 import uic
 from VkClientThread import VkClientThread
 from LoginWidget import LoginWidget
@@ -62,6 +63,24 @@ class MainWindow(QtGui.QMainWindow):
 			self.w.raise_()
 		else:
 			self.w.activateWindow()
+
+	''' I will uncomment this whenever I find a way to make application quit instead of folding when X is pressed
+	def hideEvent (self, e):
+		self.trayIcon = QtGui.QSystemTrayIcon (QtGui.QIcon (r"./data/pics/icon.png"))
+		self.trayIcon.setToolTip ("VPythonte messenger")
+		self.trayIcon.activated.connect (self.unfold)
+		self.trayIcon.show()
+		self.hide()
+		self.setWindowFlags (QtCore.Qt.Tool)
+		print e.type()
+
+	def unfold (self, e):
+		self.trayIcon.hide()
+		self.setWindowFlags (QtCore.Qt.WindowMinMaxButtonsHint | QtCore.Qt.WindowCloseButtonHint )
+		self.show()
+		self.showNormal()
+		self.activateWindow()
+	'''
 
 	# other methods
 	def updateConfig (self):
@@ -120,17 +139,16 @@ class MainWindow(QtGui.QMainWindow):
 				if self.ChatWindow.tabs[uid] == cur_idx:
  					self.ChatWindow.getTab(msg['uid']).add_message(msg['body'], name)
  	 				mark_as_read.append(msg['mid'])
+				if not self.ChatWindow.widget(self.ChatWindow.tabs[uid]).isActiveWindow():
+					self.sound.play()
+
 			else:
-				#Change icon in contact list
-  				print "Chat doesn't open"
-				#print msg
 				if (msg['uid'] not in old_messages or
 					(msg['uid'] in old_messages 
 					and msg['mid'] not in old_messages[msg['uid']])
 				   ):
 					self.popup_man.create(msg['uid'], msg['mid'], msg['body'], cnt)
 					if self.conf.config['enableSound']:
-						print "play"
 						self.sound.play()
 					cnt += 1
 				if msg['uid'] in self.new_messages:
