@@ -72,7 +72,6 @@ class MainWindow(QtGui.QMainWindow):
 		self.trayIcon.show()
 		self.hide()
 		self.setWindowFlags (QtCore.Qt.Tool)
-		print e.type()
 
 	def unfold (self, e):
 		self.trayIcon.hide()
@@ -142,7 +141,8 @@ class MainWindow(QtGui.QMainWindow):
 				if not self.ChatWindow.widget(self.ChatWindow.tabs[uid]).isActiveWindow():
 					self.ChatWindow.setTabIcon (self.ChatWindow.tabs[uid], self.mail_icon)
 					self.popup_man.create(msg['uid'], msg['mid'], msg['body'], cnt)
-					self.sound.play()
+					if self.conf.config['enableSound']:
+						self.sound.play()
 
 			else:
 				if (msg['uid'] not in old_messages or
@@ -184,7 +184,6 @@ class MainWindow(QtGui.QMainWindow):
 		self.openChatTab(id, len(self.new_messages[id]) + historyCount)
 		del self.new_messages[id]
 		self.UpdateContactList(vk.online)
-		print "open chattab from popup", id
 	
 	def openChatWindow (self, entry):
 		name = entry.text()

@@ -30,7 +30,6 @@ class PopUp(QtGui.QWidget):
 	
 	def mousePressEvent(self, event):
 		if event.button() == QtCore.Qt.LeftButton:
-			print "event" # open dialog window send signal self.id
 			self.emit(self.signal, self.id, self.mid)
 		self.close()
 
@@ -43,7 +42,6 @@ class PopUpMan(QtCore.QThread):
 	def create(self, id, mid, msg, count, time = 3000):
 		self.popups[(id, mid)] = PopUp(id, mid, msg, count, time)
 		self.popups[(id, mid)].show()
-		#self.popups[(id, mid)].raise_()
 		self.connect(self.popups[(id, mid)], self.popups[(id, mid)].signal, self.openChatTab)
 
 	def openChatTab(self, id, mid):
@@ -52,11 +50,6 @@ class PopUpMan(QtCore.QThread):
 		self.emit(self.signal, id)
 
 if __name__ == "__main__":
-
 	app = QtGui.QApplication([])
 	man = PopUpMan()
-
-	for i in xrange(5):
-		man.create(0, i, "test" * 30, i)
-	
 	app.exec_()

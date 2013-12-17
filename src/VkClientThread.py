@@ -21,7 +21,7 @@ def exeption_handling(func):
 			try:
 				return func(*args, **kwds)
 			except Exception as e:
-				print "Wrapper catch error: ", e.message
+				print "Wrapper caught error: ", e.message
 			else:
 				break
 	return wrapper
@@ -96,13 +96,11 @@ class VkClientThread(QtCore.QThread):
 	@exeption_handling
 	def updateOnline(self, online):
 		self.online = online
-		#print self.online
 		self.emit(self.updateOnlineForMainWindow, self.online)
 	
 	@exeption_handling
 	def recieveMessages(self, msgs):
 		self.messages = msgs
-		#print self.messages
 		self.emit(self.recieveMessagesForMainWindow, self.messages)
 
 	@exeption_handling

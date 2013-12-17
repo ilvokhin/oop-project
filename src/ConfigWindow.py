@@ -11,12 +11,11 @@ from PyQt4 import uic
 from VkClientThread import VkClientThread
 from LoginWidget import LoginWidget
 from Registry import Registry
-#from VkClient import VkClient
 from Config import Config
 from ChatWindow import ChatWindow
 
 def isColor (s):
-	s = str (s)
+	s = unicode (s)
 	hd = set (string.hexdigits)
 	for i in s:
 		if i not in hd:

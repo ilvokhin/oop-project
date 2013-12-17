@@ -9,7 +9,6 @@ from PyQt4 import QtGui
 from PyQt4 import uic
 
 from Registry import Registry
-#from Config import Config
 
 class LoginWidget(QtGui.QWidget):
 	def __init__(self, parent = None):
@@ -38,7 +37,6 @@ class LoginWidget(QtGui.QWidget):
 	# other methods
 	
 	def load_login_page(self):
-		#TODO: Set login url parametrs
  		login_url = "http://api.vkontakte.ru/oauth/authorize?client_id=3989945" \
 		"&scope=friends,messages,offline&redirect_uri=http://oauth.vk.com/blank.html&response_type=token"
 		self.webView.load(QtCore.QUrl(login_url))
