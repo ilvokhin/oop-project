@@ -1,0 +1,12 @@
+// dot -Tpdf work_logic.dot -o work_logic.pdf
+digraph G
+{
+	node [shape=box]
+	"main window" -> "vk thread client" [label = " new thread"]
+	"vk thread client" -> "update contact list" [label = " new thread"]
+	"vk thread client" -> "check messages" [label = " new thread"]
+	"vk thread client" -> "single query" [label = "current thread"]
+	"update contact list" -> "vk server"
+	"check messages" -> "vk server"
+	"single query" ->  "vk server"
+}
