@@ -11,6 +11,7 @@ from Registry import Registry
 from VkClientThread import VkClientThread
 
 def markUrl (msg, proto):
+	msg = QtCore.QString (msg)
 	pos = 0
 	while msg.indexOf (proto, pos) != -1:
 		urlStart = msg.indexOf (proto, pos)
@@ -51,8 +52,6 @@ class ChatTab (QtGui.QWidget):
 		self.sendButton.setEnabled (st.size() > 0)
 
 	def add_message(self, msg, name = "me"):
-		# if you are going to mark up more protocols, start with shorter ones
-		msg = QtCore.QString (msg)
 		msg = markUrl (markUrl (msg, "http://"), "https://")
 
 		conf = self.reg.objects['config']
