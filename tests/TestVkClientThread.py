@@ -27,9 +27,9 @@ class TestVkClientThread(unittest.TestCase):
 		msg = get_random_string(100)
 		uid = self.user['uid']
  		mid = self.vk.vk.messages.send(uid = uid, message = msg)
-		recieve = self.vk.vk.messages.get(filters = 1)
-		self.mid = recieve.pop(0)
-		for m in recieve:
+		received = self.vk.vk.messages.get(filters = 1)
+		self.mid = received.pop(0)
+		for m in received:
 			if mid == m['mid']:
 				break
 		else:
