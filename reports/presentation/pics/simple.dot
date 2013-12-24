@@ -1,0 +1,6 @@
+// dot -Tpdf simple.dot -o simple.pdf
+digraph G
+{
+	node [shape = record];
+	"vk server" -> "VPythonte" [label = " vk api (json)" dir="both"]
+}
