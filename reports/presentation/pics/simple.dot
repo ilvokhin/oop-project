@@ -2,5 +2,5 @@
 digraph G
 {
 	node [shape = record];
-	"vk server" -> "VPythonte" [label = " vk api (json)" dir="both"]
+	"VKontakte" -> "VPythonte" [label = " VK API (JSON)" dir="both"]
 }

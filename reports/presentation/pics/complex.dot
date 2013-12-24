@@ -5,24 +5,24 @@ digraph G
 	subgraph cluster1 
 	{
 		label = "Локальная машина";
-		"main window",
-		"vk thread client",
-		"update contact list",
-		"check messages",
-		"single query"
+		"главное окно",
+		"управляющий поток",
+		"обновление контакт-листа",
+		"запрос сообщений",
+		"обработка данных"
 		style = "dashed";
 	}
 	subgraph cluster2
 	{
 		label = "Интернет";
-		"vk server"
+		"Сервер VK"
 		style = "dashed";
 	}
-	"main window" -> "vk thread client" [label = " new thread"]
-	"vk thread client" -> "update contact list" [label = " new thread"]
-	"vk thread client" -> "check messages" [label = " new thread"]
-	"vk thread client" -> "single query" [label = "current thread"]
-	"update contact list" -> "vk server"
-	"check messages" -> "vk server"
-	"single query" ->  "vk server"
+	"главное окно" -> "управляющий поток" [label = " новый поток"]
+	"управляющий поток" -> "обновление контакт-листа" [label = " новый поток"]
+	"управляющий поток" -> "запрос сообщений" [label = " новый поток"]
+	"управляющий поток" -> "обработка данных" [label = "активный поток"]
+	"обновление контакт-листа" -> "Сервер VK"
+	"запрос сообщений" -> "Сервер VK"
+	"обработка данных" ->  "Сервер VK"
 }
