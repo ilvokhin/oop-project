@@ -6,7 +6,6 @@ import sys
 sys.path.append('../src')
 
 from ChatTab import markUrl
-from PyQt4.QtCore import QString
 import unittest
 import os
 

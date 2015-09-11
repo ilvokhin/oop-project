@@ -25,8 +25,8 @@ class TestVkClientThread(unittest.TestCase):
 		self.assertIsNotNone(vk_time)
 	def test_message_sending_and_recieving(self):
 		msg = get_random_string(100)
-		uid = self.user['uid']
- 		mid = self.vk.vk.messages.send(uid = uid, message = msg)
+		uid = self.user['user_id']
+ 		mid = self.vk.vk.messages.send(user_id = uid, message = msg)
 		received = self.vk.vk.messages.get(filters = 1)
 		self.mid = received.pop(0)
 		for m in received:
@@ -36,7 +36,7 @@ class TestVkClientThread(unittest.TestCase):
 			assertTrue(False)
 	def _mark_as_read(self):
 		"""Depends on test_message_sending_and_recieving"""
-		self.vk.vk.messages.markAsRead(mids = self.mid)
+		self.vk.vk.messages.markAsRead(message_ids = self.mid)
 		new_cnt = self.vk.vk.messages.get(filters = 1)
 		assertGreater(self.cnt, new_cnt)
 		
